@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="x5-fullscreen" content="true"><!-- QQ浏览器全屏 -->
+    <meta name="x5-page-mode" content="app"><!-- QQ浏览器应用模式 -->
+    <title>电音jun 周五新电音预告</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    <style>
+        :root {
+            --primary-color: #6200ea;
+            --secondary-color: #03dac6;
+            --dark-color: #121212;
+            --light-color: #f5f5f5;
+        }
+        
+        body {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 星星背景样式 */
+        .stars-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* 背景渐变动画 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #090221, #161039, #180b3b, #002244, #180633);
+            background-size: 400% 400%;
+            z-index: -2;
+            animation: gradientBG 15s ease infinite;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+            opacity: 0;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0; }
+            50% { opacity: var(--opacity); }
+            100% { opacity: 0; }
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        /* 标题区域渐变动画 */
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #6200ea, #03dac6, #1e88e5, #00b0ff, #3d5afe);
+            background-size: 500% 500%;
+            animation: headerGradient 12s ease infinite;
+            z-index: 0;
+            opacity: 0.8;
+        }
+        
+        @keyframes headerGradient {
+            0% { background-position: 0% 25%; }
+            25% { background-position: 50% 50%; }
+            50% { background-position: 100% 75%; }
+            75% { background-position: 50% 50%; }
+            100% { background-position: 0% 25%; }
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://source.unsplash.com/random/1600x900/?edm,music,concert') center/cover;
+            opacity: 0.2;
+            z-index: 1;
+            filter: saturate(1.2) contrast(1.1);
+        }
+        
+        .music-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .music-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .artist-name {
+            color: var(--secondary-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .artist-name:hover {
+            color: #00ffd5;
+            text-decoration: underline;
+        }
+        
+        .song-name {
+            font-size: 1.25rem;
+            margin-top: 0.5rem;
+        }
+        
+        .modal-content {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            border: 1px solid var(--primary-color);
+        }
+        
+        .modal-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .modal-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-close {
+            filter: invert(1) brightness(150%);
+        }
+        
+        .search-container {
+            margin-bottom: 2rem;
+        }
+        
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light-color);
+        }
+        
+        .form-control:focus {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--light-color);
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.25rem rgba(3, 218, 198, 0.25);
+        }
+        
+        .footer {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem 0;
+            margin-top: 3rem;
+            text-align: center;
+        }
+        
+        .audio-wave {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 30px;
+            margin-top: 10px;
+        }
+        
+        .wave-bar {
+            width: 4px;
+            height: 20px;
+            margin: 0 3px;
+            background-color: var(--secondary-color);
+            border-radius: 2px;
+            animation: wave 1.2s ease-in-out infinite;
+        }
+        
+        @keyframes wave {
+            0%, 100% {
+                height: 5px;
+            }
+            50% {
+                height: 20px;
+            }
+        }
+        
+        .wave-bar:nth-child(1) { animation-delay: 0.1s; }
+        .wave-bar:nth-child(2) { animation-delay: 0.2s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.3s; }
+        .wave-bar:nth-child(4) { animation-delay: 0.4s; }
+        .wave-bar:nth-child(5) { animation-delay: 0.5s; }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+        }
+        
+        /* 响应式优化 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .music-card {
+                padding: 1rem;
+            }
+            
+            .song-name {
+                font-size: 1rem;
+            }
+            
+            .modal-dialog {
+                margin: 10px;
+            }
+            
+            .back-to-top {
+                width: 40px;
+                height: 40px;
+            }
+        }
+        
+        /* 微信浏览器特殊优化 */
+        @media screen and (max-width: 500px) {
+            body {
+                padding-bottom: 60px; /* 避免微信底部工具栏遮挡 */
+            }
+            
+            .music-card {
+                margin-bottom: 12px;
+            }
+            
+            .header {
+                padding: 1.5rem 0;
+            }
+            
+            .audio-wave {
+                height: 20px;
+            }
+            
+            .wave-bar {
+                width: 3px;
+                margin: 0 2px;
+            }
+        }
+        
+        /* 确保在小屏幕上依然有不错的阅读体验 */
+        @media screen and (max-width: 320px) {
+            body {
+                font-size: 14px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .artist-name, .song-name {
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* 优化滚动体验 */
+        html {
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch; /* iOS 滚动优化 */
+        }
+        
+        /* 提高模态框在移动端的可用性 */
+        @media (max-width: 576px) {
+            .modal-dialog {
+                max-width: 95%;
+                margin: 10px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 星星背景容器 -->
+    <div class="stars-container" id="starsContainer"></div>
+
+    <header class="header">
+        <div class="container">
+            <h1>电音jun 周五新电音预告</h1>
+            <div class="audio-wave">
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="search-container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <input type="text" class="form-control" id="searchInput" placeholder="搜索艺人或歌曲...">
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="musicList">
+            <!-- 静态后备元素，以防JavaScript加载失败 -->
+            <div class="col-md-4">
+                <div class="music-card">
+                    <div class="artist-name" data-artist="Alan Walker">Alan Walker & KIMG</div>
+                    <div class="song-name">Story of A Bird</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="music-card">
+                    <div class="artist-name" data-artist="Armin van Buuren">Armin van Buuren x BLR</div>
+                    <div class="song-name">Bach to the Future</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="music-card">
+                    <div class="artist-name" data-artist="Calvin Harris">Calvin Harris</div>
+                    <div class="song-name">Blessings (feat. Clementree Douglas)</div>
+                </div>
+            </div>
+            <!-- JavaScript将动态加载完整列表 -->
+        </div>
+    </div>
+
+    <!-- 艺人信息模态框 -->
+    <div class="modal fade" id="artistModal" tabindex="-1" aria-labelledby="artistModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="artistModalLabel">艺人信息</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="artistInfo">
+                    <!-- 艺人信息将通过JavaScript动态加载 -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 电音jun. 版权所有.</p>
+        </div>
+    </footer>
+
+    <a href="#" class="back-to-top" id="backToTop">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+        </svg>
+    </a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        // 检测是否在微信浏览器中
+        function isWechat() {
+            return /MicroMessenger/i.test(navigator.userAgent);
+        }
+        
+        // 检测设备类型
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+        
+        // 从CSV文件加载音乐数据
+        async function loadMusicDataFromCSV() {
+            try {
+                const response = await fetch('电音jun 周五新电音预告.csv');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const csvData = await response.text();
+                return parseCSV(csvData);
+            } catch (error) {
+                console.error('加载CSV文件失败:', error);
+                // 使用备用数据
+                return musicData;
+            }
+        }
+        
+        // 解析CSV数据
+        function parseCSV(csvText) {
+            const lines = csvText.split('\n');
+            // 跳过标题行
+            const dataLines = lines.slice(1);
+            const result = [];
+            
+            for (const line of dataLines) {
+                if (line.trim() === '') continue;
+                
+                // 处理CSV格式，考虑逗号在引号内的情况
+                let values = [];
+                let currentValue = '';
+                let inQuotes = false;
+                
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    
+                    if (char === '"' && (i === 0 || line[i-1] !== '\\')) {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        values.push(currentValue);
+                        currentValue = '';
+                    } else {
+                        currentValue += char;
+                    }
+                }
+                
+                values.push(currentValue);
+                
+                // 如果分割出的值少于2个，跳过这一行
+                if (values.length < 2) continue;
+                
+                result.push({
+                    artist: values[0].trim(),
+                    song: values[1].trim()
+                });
+            }
+            
+            return result;
+        }
+        
+        // 星星背景效果
+        function createStars(count = 150) {
+            const container = document.getElementById('starsContainer');
+            if (!container) return;
+            
+            // 清空容器
+            container.innerHTML = '';
+            
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                // 随机位置
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                
+                // 随机大小
+                const size = Math.random() * 3;
+                
+                // 随机动画持续时间和透明度
+                const duration = 3 + Math.random() * 7; // 3-10秒
+                const delay = Math.random() * 10; // 0-10秒延迟
+                const opacity = 0.1 + Math.random() * 0.9; // 0.1-1透明度
+                
+                // 设置样式
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.setProperty('--duration', `${duration}s`);
+                star.style.setProperty('--opacity', opacity);
+                star.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(star);
+            }
+        }
+
+        // 音乐数据数组
+        const musicData = [
+            { artist: "Alan Walker & KIMG", song: "Story of A Bird" },
+            { artist: "Armin van Buuren x BLR", song: "Bach to the Future" },
+            { artist: "Bassboy x DJ Pantha", song: "Lock ARF" },
+            { artist: "Bear Grillz", song: "Fuck This Pit Up VIP" },
+            { artist: "BLVCK & CHNTR x Grace Grey", song: "CENDEE - Rave Däli (HELLO B!TCH)" },
+            { artist: "Blasterjaxx & Brennan Heart", song: "Together as One" },
+            { artist: "Calvin Harris", song: "Blessings (feat. Clementree Douglas)" },
+            { artist: "David Guetta & Hypaton & Europe", song: "The Final Countdown 2025" },
+            { artist: "DEEZL", song: "REBIRTH" },
+            { artist: "Eli Brown", song: "WAVOY" },
+            { artist: "Freejak", song: "My House" },
+            { artist: "G-POL", song: "Renegade Master (Don Diablo Edit)" },
+            { artist: "Hardwell", song: "Lift Off" },
+            { artist: "NUTS x Robert Falcon", song: "Lights" },
+            { artist: "Inventeb", song: "Limits" },
+            { artist: "INFLKT & Sampfire", song: "ECHO" },
+            { artist: "Joe Stone", song: "Donna Summer Nights (feat. Aloma Steele)" },
+            { artist: "Joris Voorn", song: "Tomorrow" },
+            { artist: "Julian Jordan", song: "Something to Believe In" },
+            { artist: "Kai Wachi", song: "Butterfly Dream" },
+            { artist: "Kurds", song: "Fast Money" },
+            { artist: "Lil Lords", song: "The Deviller" },
+            { artist: "Little Sis Nora", song: "GABBA GABBA" },
+            { artist: "LNY TNZ x Coone", song: "Dedicated" },
+            { artist: "Lucas Estrada x YouNotUs x Sam Gray", song: "Love Me Again" },
+            { artist: "Marcus & Martinus", song: "Endless Summer" },
+            { artist: "Martin Garrix & Mosto", song: "Limitless (Arcando Remix)" },
+            { artist: "MATTN & DJs From Mars", song: "Sweet Escape (Zero Gravity Festival Remix)" },
+            { artist: "MEDUN x LAWRENT x Jaimes", song: "Golden" },
+            { artist: "Mike Williams", song: "Learn to Fly (feat. Eirik Næss)" },
+            { artist: "Miss K8 & Tha Watcher", song: "Reflections" },
+            { artist: "MOTi", song: "Make Me Wanna" },
+            { artist: "Nick Havsen", song: "Kraken" },
+            { artist: "Nicky Romero x miflforlife x Rory Hope", song: "Don't Be Shy" },
+            { artist: "NOME.", song: "Bring It Back" },
+            { artist: "noonoouri x Max & Harvey", song: "Release Me" },
+            { artist: "Nuzb", song: "B3XY" },
+            { artist: "R3HAB", song: "The Chase" },
+            { artist: "SHAUSE", song: "Sunrise" },
+            { artist: "Showtek", song: "Save The Day (Once Again)" },
+            { artist: "Sikdope & Bello Sisoski", song: "RATS" },
+            { artist: "Stery de Cicco x Kickbait x liquidfive", song: "Touch Me (Speed of Light)" },
+            { artist: "Sub Zero Project x Rebelion", song: "Capital of Crazy" },
+            { artist: "Tiësto x Odd Mob x Goodboys", song: "Won't Be Possible" },
+            { artist: "Tommy Farrow", song: "Breathless" },
+            { artist: "Tujamo x Dizzee Rascal", song: "Fader" },
+            { artist: "William Black x Slander", song: "Waiting on This Day Forever" }
+        ];
+
+        // 艺人信息数据库
+        const artistDatabase = {
+            "Alan Walker": {
+                fullName: "Alan Walker",
+                birthYear: 1997,
+                nationality: "挪威",
+                genres: ["电子舞曲", "Future Bass", "Progressive House"],
+                famousSongs: ["Faded", "Alone", "Darkside", "On My Way"],
+                description: "Alan Walker是一位挪威DJ和音乐制作人，以标志性的面具和连帽衫形象而闻名，他的音乐风格融合了EDM和电影配乐元素。",
+                imageUrl: "https://source.unsplash.com/random/300x300/?dj,alan,walker"
+            },
+            "Armin van Buuren": {
+                fullName: "Armin Jozef Jacobus Daniël van Buuren",
+                birthYear: 1976,
+                nationality: "荷兰",
+                genres: ["Trance", "Progressive Trance", "Uplifting Trance"],
+                famousSongs: ["This Is What It Feels Like", "Blah Blah Blah", "Great Spirit"],
+                description: "Armin van Buuren是世界顶级DJ之一，他的电台节目'A State of Trance'在全球有数百万听众，他也是Armada Music的联合创始人。",
+                imageUrl: "https://source.unsplash.com/random/300x300/?dj,armin"
+            },
+            "Calvin Harris": {
+                fullName: "Adam Richard Wiles",
+                birthYear: 1984,
+                nationality: "苏格兰",
+                genres: ["EDM", "House", "Dance-pop", "Electro House"],
+                famousSongs: ["Summer", "This Is What You Came For", "Feel So Close"],
+                description: "Calvin Harris是全球收入最高的DJ之一，曾获得多项格莱美提名，并与众多流行歌手合作。",
+                imageUrl: "https://source.unsplash.com/random/300x300/?dj,calvin,harris"
+            },
+            "David Guetta": {
+                fullName: "Pierre David Guetta",
+                birthYear: 1967,
+                nationality: "法国",
+                genres: ["EDM", "House", "Progressive House", "Electro House"],
+                famousSongs: ["Titanium", "Without You", "Hey Mama"],
+                description: "David Guetta是将电子舞曲带入主流的先驱之一，曾获得多项格莱美奖，并与众多国际巨星合作。",
+                imageUrl: "https://source.unsplash.com/random/300x300/?dj,david,guetta"
+            },
+            "Hardwell": {
+                fullName: "Robbert van de Corput",
+                birthYear: 1988,
+                nationality: "荷兰",
+                genres: ["Big Room House", "Electro House", "Progressive House"],
+                famousSongs: ["Spaceman", "Apollo", "Countdown"],
+                description: "Hardwell曾两次被DJ Mag评为世界第一DJ，他创立了Revealed Recordings厂牌，培养了许多新生代DJ。",
+                imageUrl: "https://source.unsplash.com/random/300x300/?dj,hardwell"
+            },
+            "Martin Garrix": {
+                fullName: "Martijn Gerard Garritsen",
+                birthYear: 1996,
+                nationality: "荷兰",
+                genres: ["EDM", "Progressive House", "Future Bass", "Big Room House"],
+                famousSongs: ["Animals", "In the Name of Love", "Scared to Be Lonely"],
+                description: "Martin Garrix是最年轻的世界第一DJ，他创立了STMPD RCRDS厂牌，被视为电子舞曲界的天才。",
+                imageUrl: "https://source.unsplash.com/random/300x300/?dj,martin,garrix"
+            },
+            "Tiësto": {
+                fullName: "Tijs Michiel Verwest",
+                birthYear: 1969,
+                nationality: "荷兰",
+                genres: ["EDM", "House", "Trance", "Electro House"],
+                famousSongs: ["Red Lights", "Secrets", "The Business"],
+                description: "Tiësto被誉为\"电子舞曲之神\"，是电子音乐界最具影响力的人物之一，职业生涯长达30多年。",
+                imageUrl: "https://source.unsplash.com/random/300x300/?dj,tiesto"
+            }
+        };
+
+        // 当文档加载完成时执行
+        document.addEventListener('DOMContentLoaded', async function() {
+            // 尝试从CSV文件加载数据
+            const loadedMusicData = await loadMusicDataFromCSV();
+            console.log('从CSV加载的数据:', loadedMusicData);
+            
+            // 使用加载的数据或备用数据
+            const finalMusicData = loadedMusicData.length > 0 ? loadedMusicData : musicData;
+            
+            // 根据设备优化显示
+            if (isMobile()) {
+                // 移动端减少星星数量，提高性能
+                const starsCount = isWechat() ? 50 : 100;
+                createStars(starsCount);
+                
+                // 移动端优化动画性能
+                document.querySelectorAll('[data-aos]').forEach(el => {
+                    el.setAttribute('data-aos-once', 'true');
+                });
+            } else {
+                // 桌面端正常显示
+                createStars(150);
+            }
+            
+            // 微信浏览器特殊处理
+            if (isWechat()) {
+                document.body.classList.add('wechat-browser');
+                
+                // 禁用长按菜单，提高用户体验
+                document.addEventListener('contextmenu', function(e) {
+                    e.preventDefault();
+                });
+            }
+            
+            // 初始化动画
+            if (typeof AOS !== 'undefined') {
+                AOS.init({
+                    duration: 800,
+                    easing: 'ease-in-out'
+                });
+            }
+            
+            // 生成动态列表
+            try {
+                generateMusicList(finalMusicData);
+                console.log('音乐列表生成成功');
+            } catch (error) {
+                console.error('生成音乐列表时出错:', error);
+            }
+            
+            // 添加搜索功能
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    
+                    if (searchTerm.trim() === '') {
+                        generateMusicList(finalMusicData);
+                        return;
+                    }
+                    
+                    const filteredData = finalMusicData.filter(item => 
+                        item.artist.toLowerCase().includes(searchTerm) || 
+                        item.song.toLowerCase().includes(searchTerm)
+                    );
+                    
+                    generateMusicList(filteredData);
+                });
+            }
+            
+            // 添加回到顶部功能
+            const backToTop = document.getElementById('backToTop');
+            if (backToTop) {
+                window.addEventListener('scroll', function() {
+                    if (window.pageYOffset > 300) {
+                        backToTop.classList.add('visible');
+                    } else {
+                        backToTop.classList.remove('visible');
+                    }
+                });
+                
+                backToTop.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+        });
+        
+        // 生成音乐列表函数
+        function generateMusicList(data) {
+            const musicListElement = document.getElementById('musicList');
+            if (!musicListElement) {
+                console.error('找不到音乐列表容器元素');
+                return;
+            }
+            
+            // 清空列表
+            musicListElement.innerHTML = '';
+            
+            // 遍历数据生成卡片
+            data.forEach(function(item, index) {
+                // 创建列
+                const column = document.createElement('div');
+                column.className = 'col-md-4';
+                
+                // 设置动画延迟
+                const delay = (index % 10) * 100;
+                if (typeof AOS !== 'undefined') {
+                    column.setAttribute('data-aos', 'fade-up');
+                    column.setAttribute('data-aos-delay', delay);
+                }
+                
+                // 创建卡片
+                const card = document.createElement('div');
+                card.className = 'music-card';
+                
+                // 提取主要艺人名称
+                let mainArtist = item.artist;
+                if (item.artist.includes('&')) {
+                    mainArtist = item.artist.split('&')[0].trim();
+                } else if (item.artist.includes('x')) {
+                    mainArtist = item.artist.split('x')[0].trim();
+                }
+                
+                // 创建卡片内容
+                const artistElement = document.createElement('div');
+                artistElement.className = 'artist-name';
+                artistElement.setAttribute('data-artist', mainArtist);
+                artistElement.textContent = item.artist;
+                
+                const songElement = document.createElement('div');
+                songElement.className = 'song-name';
+                songElement.textContent = item.song;
+                
+                // 添加点击事件
+                artistElement.addEventListener('click', function() {
+                    showArtistInfo(mainArtist);
+                });
+                
+                // 组装卡片
+                card.appendChild(artistElement);
+                card.appendChild(songElement);
+                column.appendChild(card);
+                musicListElement.appendChild(column);
+            });
+        }
+        
+        // 显示艺人信息
+        function showArtistInfo(artist) {
+            const modal = new bootstrap.Modal(document.getElementById('artistModal'));
+            const modalTitle = document.getElementById('artistModalLabel');
+            const artistInfoElement = document.getElementById('artistInfo');
+            
+            if (!modal || !modalTitle || !artistInfoElement) {
+                console.error('模态框元素不存在');
+                return;
+            }
+            
+            // 设置模态框标题
+            modalTitle.textContent = artist;
+            
+            // 获取艺人信息
+            const artistInfo = getArtistInfo(artist);
+            
+            // 填充内容
+            if (artistInfo) {
+                artistInfoElement.innerHTML = `
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="${artistInfo.imageUrl}" class="img-fluid rounded" alt="${artistInfo.fullName}">
+                        </div>
+                        <div class="col-md-8">
+                            <h5>${artistInfo.fullName}</h5>
+                            <p><strong>出生年份:</strong> ${artistInfo.birthYear}</p>
+                            <p><strong>国籍:</strong> ${artistInfo.nationality}</p>
+                            <p><strong>音乐风格:</strong> ${artistInfo.genres.join(', ')}</p>
+                            <p><strong>知名作品:</strong> ${artistInfo.famousSongs.join(', ')}</p>
+                            <p>${artistInfo.description}</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                artistInfoElement.innerHTML = `
+                    <div class="text-center">
+                        <img src="https://source.unsplash.com/random/300x300/?dj,music,${artist}" class="img-fluid rounded mb-3" alt="${artist}">
+                        <h5>${artist}</h5>
+                        <p>暂无详细信息，这位艺人正在崭露头角！</p>
+                    </div>
+                `;
+            }
+            
+            // 显示模态框
+            modal.show();
+        }
+        
+        // 查询艺人信息
+        function getArtistInfo(artist) {
+            // 直接匹配
+            if (artistDatabase[artist]) {
+                return artistDatabase[artist];
+            }
+            
+            // 部分匹配
+            for (const key in artistDatabase) {
+                if (artist.includes(key) || key.includes(artist)) {
+                    return artistDatabase[key];
+                }
+            }
+            
+            return null;
+        }
+    </script>
+</body>
+</html> 
